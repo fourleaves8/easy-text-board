@@ -9,8 +9,12 @@ public class App {
 
 	int maxArticlesSize = articles.length; 
 	
+	public int articlesSize() {
+		return articlesSize;
+	}
+	
 	public Article getArticle(int id) { 
-		if (articlesSize == 0 || id > articlesSize) {
+		if (articlesSize() == 0 || id > articlesSize()) {
 			return null;
 		} else if (id < 0) {
 			return null;
@@ -61,13 +65,13 @@ public class App {
 			} else if (command.equals("article list")) {
 				System.out.println("== 게시물 리스트 ==");
 				
-				if (articlesSize == 0) {
+				if (articlesSize() == 0) {
 					System.out.println("게시물이 존재하지 않습니다.");
 					continue;
 				}
 				System.out.println("번호 / 제목");
 				
-				for (int i = 1; i <= articlesSize; i++) {
+				for (int i = 1; i <= articlesSize(); i++) {
 					Article article = getArticle(i);	
 					System.out.printf("%d / %s%n", article.id, article.title);
 
