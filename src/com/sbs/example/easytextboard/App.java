@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class App {
 	int lastArticleId = 0;
 	int articlesSize = 0;
-	Article[] articles = new Article[3];
+	Article[] articles = new Article[100];
 
 	int maxArticlesSize = articles.length;
 
@@ -14,19 +14,34 @@ public class App {
 	}
 
 	public Article getArticle(int id) {
-		if (lastArticleId == 0 || id > lastArticleId) {
-			return null;
-		} else if (id < 0) {
+		int index = getIndexOf(id);
+		if (index == -1) {
 			return null;
 		}
-		return articles[id - 1];
+		return articles[index];
+	}
+
+	private void remove(int id) {
+		int index = getIndexOf(id);
+		if (index == -1) {
+			return;
+		}
+		for (int i = index + 1; i < articlesSize(); i++) {
+			articles[i - 1] = articles[i];
+		}
+		articlesSize--;
+	}
+
+	private int getIndexOf(int id) {
+		for (int i = 0; i < articlesSize(); i++) {
+			if (articles[i].id == id) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	public void run() {
-		for (int i = 0; i < maxArticlesSize; i++) {
-			articles[i] = new Article();
-		}
-
 		Scanner sc = new Scanner(System.in);
 
 		while (true) {
@@ -34,7 +49,6 @@ public class App {
 			String command = sc.nextLine();
 
 			if (command.equals("article add")) {
-
 				int articleId = lastArticleId + 1;
 				if (articlesSize() >= maxArticlesSize) {
 					System.out.println("더이상 등록할 수 없습니다.");
@@ -49,13 +63,15 @@ public class App {
 				System.out.printf("내용 : ");
 				String body = sc.nextLine();
 
-				Article article = getArticle(articleId);
+				Article article = new Article();
 
 				article.id = articleId;
 				article.title = title;
 				article.body = body;
 
 				System.out.printf("%d번 게시물이 등록되었습니다.%n", articleId);
+
+				articles[articlesSize] = article;
 
 				articlesSize++;
 
@@ -68,8 +84,8 @@ public class App {
 				}
 				System.out.println("번호 / 제목");
 
-				for (int i = 1; i <= articlesSize(); i++) {
-					Article article = getArticle(i);
+				for (int i = 0; i < articlesSize(); i++) {
+					Article article = articles[i];
 					System.out.printf("%d / %s%n", article.id, article.title);
 
 				}
@@ -90,7 +106,18 @@ public class App {
 				System.out.printf("번호 : %s%n", article.body);
 
 			} else if (command.startsWith("article delete ")) {
-				System.out.println("== 게시물 삭제 ==");
+				int inputId = Integer.parseInt(command.split(" ")[2]);
+
+				System.out.println("== 게시물 삭세 ==");
+				Article article = getArticle(inputId);
+
+				if (article == null) {
+					System.out.printf("%d번 게시물은 존재하지 않습니다.%n", inputId);
+					continue;
+
+				}
+				remove(inputId);
+				System.out.printf("%d번 게시물이 삭제되었습니다.%n", inputId);
 
 			} else if (command.endsWith("system exit")) {
 				System.out.println("프로그램을 종료합니다.");
@@ -102,4 +129,5 @@ public class App {
 		}
 		sc.close();
 	}
+
 }
