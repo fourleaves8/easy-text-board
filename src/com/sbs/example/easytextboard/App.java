@@ -4,10 +4,13 @@ import java.util.Scanner;
 
 public class App {
 	int lastArticleId = 0;
+	int articlesSize = 0;
 	Article[] articles = new Article[3];
 
+	int maxArticlesSize = articles.length; 
+	
 	public Article getArticle(int id) { 
-		if (lastArticleId == 0 || id > lastArticleId) {
+		if (articlesSize == 0 || id > articlesSize) {
 			return null;
 		} else if (id < 0) {
 			return null;
@@ -15,7 +18,7 @@ public class App {
 		return articles[id-1]; 
 	}
 	public void run() {
-		for (int i = 0; i < articles.length; i++) {
+		for (int i = 0; i < maxArticlesSize; i++) {
 			articles[i] = new Article();
 		}
 		
@@ -33,6 +36,8 @@ public class App {
 					continue;
 				}
 				lastArticleId = articleId;
+				
+				articlesSize = lastArticleId;
 				
 				System.out.println("== 게시물 등록 ==");
 
@@ -55,14 +60,15 @@ public class App {
 
 			} else if (command.equals("article list")) {
 				System.out.println("== 게시물 리스트 ==");
-				if (lastArticleId == 0) {
+				
+				if (articlesSize == 0) {
 					System.out.println("게시물이 존재하지 않습니다.");
 					continue;
 				}
 				System.out.println("번호 / 제목");
 				
-				for (int i = 1; i <= lastArticleId; i++) {
-					Article article = getArticle(i);
+				for (int i = 1; i <= articlesSize; i++) {
+					Article article = getArticle(i);	
 					System.out.printf("%d / %s%n", article.id, article.title);
 
 				}
