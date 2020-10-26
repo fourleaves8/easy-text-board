@@ -35,7 +35,7 @@ public class App {
 			if (command.equals("article add")) {
 
 				int articleId = lastArticleId + 1;
-				if (articleId > articles.length) {
+				if (articlesSize() >= maxArticlesSize) {
 					System.out.println("더이상 등록할 수 없습니다.");
 					continue;
 				}
