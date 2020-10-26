@@ -3,15 +3,22 @@ package com.sbs.example.easytextboard;
 import java.util.Scanner;
 
 public class App {
+	int lastArticleId = 0;
+	Article[] articles = new Article[3];
+
+	public Article getArticle(int id) { 
+		if (lastArticleId == 0 || id > lastArticleId) {
+			return null;
+		} else if (id < 0) {
+			return null;
+		}
+		return articles[id-1]; 
+	}
 	public void run() {
-
-		int lastArticleId = 0;
-
-		Article[] articles = new Article[3];
 		for (int i = 0; i < articles.length; i++) {
 			articles[i] = new Article();
 		}
-
+		
 		Scanner sc = new Scanner(System.in);
 
 		while (true) {
@@ -25,21 +32,26 @@ public class App {
 					System.out.println("더이상 등록할 수 없습니다.");
 					continue;
 				}
-
+				lastArticleId = articleId;
+				
 				System.out.println("== 게시물 등록 ==");
 
 				System.out.printf("제목 : ");
 				String title = sc.nextLine();
 				System.out.printf("내용 : ");
 				String body = sc.nextLine();
-
-				articles[lastArticleId].id = articleId;
-				articles[lastArticleId].title = title;
-				articles[lastArticleId].body = body;
+				
+			
+				
+				Article article =  getArticle(articleId);
+				
+				article.id = articleId;
+				article.title = title;
+				article.body = body;
 
 				System.out.printf("%d번 게시물이 등록되었습니다.%n", articleId);
 
-				lastArticleId = articleId;
+				
 
 			} else if (command.equals("article list")) {
 				System.out.println("== 게시물 리스트 ==");
@@ -48,9 +60,10 @@ public class App {
 					continue;
 				}
 				System.out.println("번호 / 제목");
-
-				for (int i = 0; i < lastArticleId; i++) {
-					System.out.printf("%d / %s%n", articles[i].id, articles[i].title);
+				
+				for (int i = 1; i <= lastArticleId; i++) {
+					Article article = getArticle(i);
+					System.out.printf("%d / %s%n", article.id, article.title);
 
 				}
 
@@ -58,14 +71,16 @@ public class App {
 				int inputId = Integer.parseInt(command.split(" ")[2]);
 
 				System.out.println("== 게시물 상세 ==");
-
-				if (lastArticleId == 0 || inputId > lastArticleId) {
+				Article article = getArticle(inputId);
+				
+				if (article == null) {
 					System.out.printf("%d번 게시물은 존재하지 않습니다.%n", inputId);
 					continue;
-				}
-				System.out.printf("번호 : %d%n", inputId);
-				System.out.printf("번호 : %s%n", articles[inputId-1].title);
-				System.out.printf("번호 : %s%n", articles[inputId-1].body);
+				
+				} 
+				System.out.printf("번호 : %d%n", article.id);
+				System.out.printf("번호 : %s%n", article.title);
+				System.out.printf("번호 : %s%n", article.body);
 				
 			} else if (command.startsWith("article delete ")) {
 				System.out.println("== 게시물 삭제 ==");
