@@ -28,9 +28,9 @@ public class App {
 
 				System.out.println("== 게시물 등록 ==");
 
-				System.out.println("제목 : ");
+				System.out.printf("제목 : ");
 				String title = sc.nextLine();
-				System.out.println("내용 : ");
+				System.out.printf("내용 : ");
 				String body = sc.nextLine();
 
 				articles[lastArticleId].id = articleId;
@@ -48,15 +48,25 @@ public class App {
 					continue;
 				}
 				System.out.println("번호 / 제목");
-			
+
 				for (int i = 0; i < lastArticleId; i++) {
 					System.out.printf("%d / %s%n", articles[i].id, articles[i].title);
-					
+
 				}
 
 			} else if (command.startsWith("article detail ")) {
+				int inputId = Integer.parseInt(command.split(" ")[2]);
+
 				System.out.println("== 게시물 상세 ==");
 
+				if (lastArticleId == 0 || inputId > lastArticleId) {
+					System.out.printf("%d번 게시물은 존재하지 않습니다.%n", inputId);
+					continue;
+				}
+				System.out.printf("번호 : %d%n", inputId);
+				System.out.printf("번호 : %s%n", articles[inputId-1].title);
+				System.out.printf("번호 : %s%n", articles[inputId-1].body);
+				
 			} else if (command.startsWith("article delete ")) {
 				System.out.println("== 게시물 삭제 ==");
 
